@@ -1,4 +1,4 @@
 cimplelang
 ==========
 
-C implementation of schani/simplelang
+C implementation of https://github.com/schani/SimpLang
