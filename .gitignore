@@ -1,3 +1,9 @@
+# Generated files
+*.tab.c
+*.tab.h
+lexer.c
+cimplelang
+
 # Object files
 *.o
 *.ko
