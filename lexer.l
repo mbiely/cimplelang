@@ -13,29 +13,70 @@ void track_location();
 
 OP_OR    "||"
 OP_AND   "&&"
+OP_NOT   "!"
 OP_EQL   "=="
-OP_ASS   "="
+OP_LT    "<"
 OP_ADD   "+"
-OP_MORE  [-+*<!]
+OP_MULT  "*"
+OP_NEG   "-"
+SYN_ASS  "="
 KW_LET   "let"
 KW_IN    "in"
 KW_END   "end"
+KW_LOOP  "loop"
+KW_AND   "and"
+KW_RECUR "recur"
+KW_IF    "if"
+KW_THEN  "then"
+KW_ELSE  "else"
 DIGIT    [0-9]
 IDENT    [_a-zA-Z][_a-zA-Z0-9]*
 
 %%
 
-{KW_LET}    {
-    return LET;
+{OP_OR}     {
+    yylval.character = *yytext;
+    return BOPERATOR;
 }
 
-{KW_END}    {
-    return END;
+{OP_AND}    {
+    yylval.character = *yytext;
+    return BOPERATOR;
 }
 
-{KW_IN}     {
-    return IN;
+{OP_NOT}    { return NOT; }
+
+{OP_EQL}    {
+    yylval.character = *yytext;
+    return EOPERATOR;
 }
+
+{OP_LT}     {
+    yylval.character = *yytext;
+    return EOPERATOR;
+}
+
+{OP_ADD}    {
+    yylval.character = *yytext;
+    return OPERATOR;
+}
+
+{OP_MULT}    {
+    yylval.character = *yytext;
+    return OPERATOR;
+}
+
+{OP_NEG}    { return NEG; }
+{SYN_ASS}   { return ASSIGNMENT; }
+{KW_LET}    { return LET; }
+{KW_IN}     { return IN; }
+{KW_END}    { return END; }
+{KW_LOOP}   { return LOOP; }
+{KW_AND}    { return AND; }
+{KW_RECUR}  { return RECUR; }
+{KW_IF}     { return IF; }
+{KW_THEN}   { return THEN; }
+{KW_ELSE}   { return ELSE; }
 
 {DIGIT}+    {
     yylval.integer = atoi(yytext);
@@ -47,26 +88,8 @@ IDENT    [_a-zA-Z][_a-zA-Z0-9]*
     return IDENTIFIER;
 }
 
-{OP_ADD}    {
-    yylval.character = *yytext;
-    return OPERATOR;
-}
-
-{OP_AND}    {
-    printf("An AND\n");
-}
-
-{OP_EQL}    {
-    printf("An EQL?\n");
-}
-
-{OP_ASS}    {
-    return ASSIGNMENT;
-}
-
-{OP_MORE}   {
-    printf("Some operator: %s\n", yytext);
-}
+"("         { return P_OPEN; }
+")"         { return P_CLOSE; }
 
 [ \t\n]+ // whitespace
 
