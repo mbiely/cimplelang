@@ -3,11 +3,11 @@ LDFLAGS=
 all: cimplelang
 
 clean: 
-	rm -f cimplelang *.o parser.c *.tab.h *.tab.c lexer.c
+	rm -f cimplelang *.o *.tab.h *.tab.c lexer.c
 
 LEX=flex
      
-cimplelang: parser.o lexer.o cimplelang.o
+cimplelang: parser.tab.o lexer.o cimplelang.o
 
 lexer.o: lexer.c
 
@@ -19,3 +19,6 @@ lexer.c: parser.tab.h lexer.l
 
 test: cimplelang
 	./cimplelang < test.sl
+
+fac: cimplelang
+	./cimplelang < fac.sl
