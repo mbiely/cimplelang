@@ -1,6 +1,11 @@
 %{
 #include<stdlib.h>
+#include "ast.h"
+
+#define YYSTYPE struct ast_node
+
 #include "parser.tab.h"
+
 
 void track_location();
 
@@ -58,23 +63,23 @@ IDENT    [_a-zA-Z][_a-zA-Z0-9]*
 
 {OP_ADD}    {
     yylval.character = *yytext;
-    return OPERATOR;
+    return ADD;
 }
 
 {OP_MULT}    {
     yylval.character = *yytext;
-    return OPERATOR;
+    return MULT;
 }
 
 {OP_NEG}    { return NEG; }
 {SYN_ASS}   { return ASSIGNMENT; }
-{KW_LET}    { return LET; }
+{KW_LET}    { return TLET; }
 {KW_IN}     { return IN; }
 {KW_END}    { return END; }
-{KW_LOOP}   { return LOOP; }
+{KW_LOOP}   { return TLOOP; }
 {KW_AND}    { return AND; }
-{KW_RECUR}  { return RECUR; }
-{KW_IF}     { return IF; }
+{KW_RECUR}  { return TRECUR; }
+{KW_IF}     { return TIF; }
 {KW_THEN}   { return THEN; }
 {KW_ELSE}   { return ELSE; }
 
@@ -84,7 +89,7 @@ IDENT    [_a-zA-Z][_a-zA-Z0-9]*
 }
 
 {IDENT}     {
-    yylval.string = yytext;
+    yylval.string = strdup(yytext);
     return IDENTIFIER;
 }
 

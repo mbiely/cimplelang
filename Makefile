@@ -1,13 +1,14 @@
-LDFLAGS= 
+LDFLAGS=
+CFLAGS=-g 
 
 all: cimplelang
 
-clean: 
+clean:
 	rm -f cimplelang *.o *.tab.h *.tab.c lexer.c
 
 LEX=flex
-     
-cimplelang: parser.tab.o lexer.o cimplelang.o
+
+cimplelang: parser.tab.o lexer.o cimplelang.o ast.o
 
 lexer.o: lexer.c
 
