@@ -9,6 +9,12 @@ struct list_node {
     struct list_node* next;
 };
 
+void iter_list(struct list_node* head, void (*f)(void *)) {
+    struct list_node* h;
+    for(h = head; h!=NULL; h=h->next) {
+        f(h->elem);
+    }
+}
 
 struct list_node* list_prepend(struct list_node* list, void* elem) {
     struct list_node* head = malloc(sizeof(struct list_node));
@@ -23,17 +29,30 @@ struct list_node* list_prepend(struct list_node* list, void* elem) {
     return head;
 }
 
-void print_list(struct list_node* list) {
+void print_tree_list(struct list_node* list) {
+    struct list_node *l = list;
+
+    while(l != NULL) {
+        print_tree((struct ast_node*)l->elem);
+        l = l->next;
+    }
+}
+
+void print_string_list(struct list_node* list) {
     struct list_node *l = list;
 
     while(l != NULL) {
         printf("%s, ", (char*)l->elem);
         l = l->next;
     }
-    printf("NULL\n");
 }
 
+
 void print_tree(struct ast_node* value) {
+    if (NULL == value) {
+        printf(" $nix ");
+        return;
+    }
     switch(value->type) {
     case INT:
         printf("%d", value->integer);
@@ -50,6 +69,20 @@ void print_tree(struct ast_node* value) {
         print_tree(value->binary.right);
         printf(")");
         break;
+    case FUNDEF:
+        printf("(fun ");
+	print_string_list(value->binding.name_and_args);
+        print_tree(value->binding.value);
+        printf(" nuf)");
+	break;
+    case FUNCALL:
+        printf("call %s(", value->call.name);
+        print_tree_list(value->call.args);
+        printf(")llac ");
+	break;
+    case VAR:
+	printf("%s", value->string);
+	break;
     default:
         printf("??");
         break;
@@ -150,8 +183,8 @@ struct ast_node* node_recur(struct list_node* bindings) {
     struct ast_node* node = malloc(sizeof(struct ast_node));
 
     node->type = RECUR;
-    node->let.bindings = bindings;
-    node->let.in = NULL;
+    node->call.args = bindings;
+    node->call.name = NULL;
 
     return node;
 }

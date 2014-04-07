@@ -1,5 +1,6 @@
-#ifndef CIMPLELANG_AST_TYPES_H
-#define CIMPLELANG_AST_TYPES_H
+#ifndef CIMPLELANG_AST_H
+#define CIMPLELANG_AST_H
+
 
 enum ast_node_type { INT, FUNDEF, VALDEF, UNARY, BINARY, LET, FUNCALL, VAR, IF, RECUR, LOOP };
 
@@ -31,10 +32,10 @@ struct ast_node {
             struct list_node* bindings;
             struct ast_node*  in;
         } let;
-	struct {
-	    char* name;
-	    struct list_node* args;
-	} call;
+        struct {
+            char* name;
+            struct list_node* args;
+        } call;
         struct {
             struct ast_node* cond;
             struct ast_node* then;
@@ -43,8 +44,10 @@ struct ast_node {
     };
 };
 
-void print_list(struct list_node* list);
+void print_string_list(struct list_node* list);
+void print_tree_list(struct list_node* list);
 void print_tree(struct ast_node* tree);
+void iter_list(struct list_node* head, void (*f)(void *));
 
 struct list_node;
 struct list_node* list_prepend(struct list_node* list, void* elem);

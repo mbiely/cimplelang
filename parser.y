@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include "ast.h"
+#include "cimplelang.h"
 
 int yylex(void);
 void yyerror(char const *);
@@ -53,21 +54,21 @@ void yyerror(char const *);
 
 %%
 
-simplelang: top_let_clauses                     {  $$ = $1; }
+simplelang: top_let_clauses                     {  top_level_defs = $1; $$ = $1; }
 ;
 
 top_let_clauses: top_let_clause top_let_clauses { $$ = list_prepend($2, $1); }
                | top_let_clause                 { $$ = list_prepend(NULL, $1); }
                ;
 
-top_let_clause: TLET binding END        { $$ = $2; }
+top_let_clause: TLET binding END          { $$ = $2; }
               | let_clause                { $$ = $1; }
               ;
 
 let_clause: TLET bindings IN value END  { $$ = node_let($2, $4); }
           ;
 
-bindings: binding bindings       { $$ = list_prepend($2, $1); }
+bindings: binding bindings             { $$ = list_prepend($2, $1); }
            | binding                   { $$ = list_prepend(NULL, $1); }
            ;
 
@@ -122,8 +123,3 @@ extern char* yytext;
 void yyerror (char const *s) {
     fprintf (stderr, "%s between %d,%d and %d,%d (near >%s<)\n", s, yylloc.first_line, yylloc.first_column, yylloc.last_line, yylloc.last_column, yytext);
 }
-
- int main( int argc, char **argv )
- {
-    yyparse();
- }
