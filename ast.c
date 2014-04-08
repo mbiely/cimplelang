@@ -3,11 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct list_node {
-    void * elem;
-    struct list_node* prev;
-    struct list_node* next;
-};
 
 void iter_list(struct list_node* head, void (*f)(void *)) {
     struct list_node* h;
@@ -22,19 +17,20 @@ struct list_node* list_prepend(struct list_node* list, void* elem) {
     head->elem = elem;
     head->next = list;
 
-    if (list!=NULL) {
-        list->prev = head;
-    }
-
     return head;
 }
 
 void print_tree_list(struct list_node* list) {
     struct list_node *l = list;
 
-    while(l != NULL) {
+    for(;;) {
         print_tree((struct ast_node*)l->elem);
         l = l->next;
+        if(l != NULL) {
+            printf(", ");
+        } else {
+            break;
+        }
     }
 }
 
@@ -53,7 +49,7 @@ void print_tree(struct ast_node* value) {
         printf(" $nix ");
         return;
     }
-    switch(value->type) {
+    switch (value->type) {
     case INT:
         printf("%d", value->integer);
         break;
@@ -71,18 +67,50 @@ void print_tree(struct ast_node* value) {
         break;
     case FUNDEF:
         printf("(fun ");
-	print_string_list(value->binding.name_and_args);
+        print_string_list(value->binding.name_and_args);
         print_tree(value->binding.value);
         printf(" nuf)");
-	break;
+        break;
     case FUNCALL:
         printf("call %s(", value->call.name);
         print_tree_list(value->call.args);
         printf(")llac ");
-	break;
+        break;
     case VAR:
-	printf("%s", value->string);
-	break;
+        printf("%s", value->string);
+        break;
+    case LET:
+            printf("let ");
+        print_tree_list(value->let.bindings);
+        printf(" in ");
+        print_tree(value->let.in);
+        printf(" tel ");
+        break;
+    case LOOP:
+            printf("loop ");
+        print_tree_list(value->let.bindings);
+        printf(" in ");
+        print_tree(value->let.in);
+        printf(" pool ");
+        break;
+    case RECUR:
+        printf("recur ");
+        print_tree_list(value->call.args);
+        printf(" rucec ");
+        break;
+    case VALDEF:
+        printf("%s = ", value->binding.name);
+        print_tree(value->binding.value);
+        break;
+    case IF:
+        printf("if ");
+        print_tree(value->when.cond);
+        printf(" then ");
+        print_tree(value->when.then);
+        printf(" else ");
+        print_tree(value->when.els);
+        printf(" fi ");
+        break;
     default:
         printf("??");
         break;

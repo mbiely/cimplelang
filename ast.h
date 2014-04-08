@@ -4,6 +4,8 @@
 
 enum ast_node_type { INT, FUNDEF, VALDEF, UNARY, BINARY, LET, FUNCALL, VAR, IF, RECUR, LOOP };
 
+struct list_node;
+
 struct ast_node {
     enum ast_node_type type;
     union {
@@ -44,10 +46,14 @@ struct ast_node {
     };
 };
 
+struct list_node {
+    void * elem;
+    struct list_node* next;
+};
+
 void print_string_list(struct list_node* list);
 void print_tree_list(struct list_node* list);
 void print_tree(struct ast_node* tree);
-void iter_list(struct list_node* head, void (*f)(void *));
 
 struct list_node;
 struct list_node* list_prepend(struct list_node* list, void* elem);
