@@ -8,7 +8,7 @@ clean:
 
 LEX=flex
 
-cimplelang: parser.tab.o lexer.o cimplelang.o ast.o
+cimplelang: parser.tab.o lexer.o cimplelang.o ast.o inter.o
 
 lexer.o: lexer.c
 

@@ -9,7 +9,7 @@ struct list_node;
 struct ast_node {
     enum ast_node_type type;
     union {
-        int integer; /* integer value */
+        long integer; /* integer value */
         char* string; /* symbol table index */
         char character;
         struct list_node* list;
@@ -57,6 +57,8 @@ void print_tree(struct ast_node* tree);
 
 struct list_node;
 struct list_node* list_prepend(struct list_node* list, void* elem);
+void*  list_first(struct list_node* list);
+struct list_node* list_rest(struct list_node* list);
 
 struct ast_node* node_int(int i);
 struct ast_node* node_unary(char op, struct ast_node* child);

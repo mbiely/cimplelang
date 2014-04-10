@@ -12,4 +12,6 @@ end
 
 let main n =
     fac (n)
+in 
+    main (10)
 end

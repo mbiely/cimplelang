@@ -20,6 +20,15 @@ struct list_node* list_prepend(struct list_node* list, void* elem) {
     return head;
 }
 
+void* list_first(struct list_node* list) {
+    return list->elem;
+}
+
+struct list_node* list_rest(struct list_node* list) {
+    return list->next;
+}
+
+
 void print_tree_list(struct list_node* list) {
     struct list_node *l = list;
 
@@ -51,7 +60,7 @@ void print_tree(struct ast_node* value) {
     }
     switch (value->type) {
     case INT:
-        printf("%d", value->integer);
+        printf("%ld", value->integer);
         break;
     case UNARY:
         printf("%c(", value->unary.op);
@@ -80,7 +89,7 @@ void print_tree(struct ast_node* value) {
         printf("%s", value->string);
         break;
     case LET:
-            printf("let ");
+        printf("let ");
         print_tree_list(value->let.bindings);
         printf(" in ");
         print_tree(value->let.in);

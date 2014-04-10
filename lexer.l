@@ -84,7 +84,7 @@ IDENT    [_a-zA-Z][_a-zA-Z0-9]*
 {KW_ELSE}   { return ELSE; }
 
 {DIGIT}+    {
-    yylval.integer = atoi(yytext);
+    yylval.integer = atol(yytext);
     return INTEGER;
 }
 
